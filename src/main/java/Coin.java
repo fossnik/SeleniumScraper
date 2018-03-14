@@ -17,9 +17,9 @@ public class Coin {
 	public Coin(WebElement symbol, WebElement name, WebElement price, WebElement change, WebElement pChange, WebElement marketCap, WebElement volume, WebElement volume24h, WebElement totalVolume24h, WebElement circulatingSupply) {
 		this.symbol = symbol.getText();
 		this.name = name.getText();
-		this.price = Double.valueOf(price.getText().replaceAll(",",""));
-		this.change = Double.valueOf(change.getText().replaceAll(",","").replaceAll("%", ""));
-		this.pChange = Double.valueOf(pChange.getText().replaceAll(",","").replaceAll("%", ""));
+		this.price = Double.valueOf(price.getText().replaceAll(",", ""));
+		this.change = Double.valueOf(change.getText().replaceAll(",", "").replaceAll("%", ""));
+		this.pChange = Double.valueOf(pChange.getText().replaceAll(",", "").replaceAll("%", ""));
 		this.marketCap = parseMagnitude(marketCap);
 		this.volume = parseMagnitude(volume);
 		this.volume24h = parseMagnitude(volume24h);
@@ -29,7 +29,7 @@ public class Coin {
 	
 	private Double parseMagnitude(WebElement we) {
 
-		String string = we.getText().replaceAll("[^0-9.MBT]","");
+		String string = we.getText().replaceAll("[^0-9.MBT]", "");
 
 		// M B and T for Millions, Billions, and Trillions. (eg 142.43B	=== 142,000,000,000)
 		switch (string.charAt(string.length() - 1)) {
@@ -40,8 +40,8 @@ public class Coin {
 			case 'T':
 				return Double.valueOf(string.replaceAll("T", "")) * 1000000000000D;
 			default:
-				if (string.matches("\\D+"))
-					throw new InvalidParameterException("Cannot be converted to valid number");
+				if (string.matches("[\\D.]+"))
+					throw new InvalidParameterException("Magnitude Conversion Failure - Invalid Non-digit Characters");
 				else
 					return Double.valueOf(string);
 		}

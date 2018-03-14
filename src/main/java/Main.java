@@ -4,6 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -20,16 +21,19 @@ public class Main {
 		List<WebElement> columnHeads = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]/a"));
 		List<WebElement> rowHeads = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));
 
-		System.out.printf("Row Heads: %s\n", rowHeads.size());
-		for (WebElement anElement : rowHeads) {
-			System.out.print(anElement.getText() + " | ");
+		// construct matrix of coins and their respective properties/metrics
+		String[][] matrix = new String[columnHeads.size()][rowHeads.size()];
+		for (int column = 0, numPairs = columnHeads.size(); column < numPairs; column++) {
+			WebElement pair = columnHeads.get(column);
+
+			for (int row = 0, numProperties = rowHeads.size(); row < numProperties; row++) {
+				WebElement property = rowHeads.get(row);
+				matrix[column][row] = property.getText();
+			}
+
 		}
 
-		System.out.println("\n");
-
-		System.out.printf("Column Heads: %s\n", columnHeads.size());
-		for (WebElement anElement : columnHeads) {
-			System.out.print(anElement.getText() + " | ");
-		}
+		// print matrix
+		System.out.println(Arrays.deepToString(matrix));
 	}
 }

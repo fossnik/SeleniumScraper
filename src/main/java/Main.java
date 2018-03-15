@@ -31,7 +31,8 @@ public class Main {
 
 		// build a list of coins with their respective properties
 		List<Coin> coins = new ArrayList<Coin>();
-		for (int i = 2; i < symbols.size() + 1; i++) {
+//		for (int i = 2; i < symbols.size() + 1; i++) {
+		for (int i = 2; i < 6; i++) {
 			coins.add(new Coin(
 					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[2]/a")),
 					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[3]")),
@@ -49,5 +50,10 @@ public class Main {
 		for (Coin coin: coins) {
 			System.out.println(coin.toString());
 		}
+
+		if (Snapshot.commitSnapshot(coins))
+			System.out.println("Snapshot Successfully Committed to DB");
+		else
+			System.out.println("Failed to Push to database");
 	}
 }

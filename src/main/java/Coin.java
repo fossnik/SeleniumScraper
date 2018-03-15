@@ -62,4 +62,44 @@ public class Coin {
 				", circulatingSupply=" + circulatingSupply +
 				'}';
 	}
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public Double getChange() {
+		return change;
+	}
+
+	public Double getpChange() {
+		return pChange;
+	}
+
+	public Double getMarketCap() {
+		return marketCap;
+	}
+
+	public Double getVolume() {
+		return volume;
+	}
+
+	public Double getVolume24h() {
+		return volume24h;
+	}
+
+	public Double getTotalVolume24h() {
+		return totalVolume24h;
+	}
+
+	public Double getCirculatingSupply() {
+		return circulatingSupply;
+	}
 }

@@ -24,14 +24,14 @@ class Snapshot {
 		if (!createConnection()) return false;
 
 		// attempt to create tables for all coins
-		for (Coin c: coins) {
+		for (Coin coin: coins) {
 
 			// conform to table title strictures
-			String TABLE_TITLE = c.getSymbol().toLowerCase().replaceAll("[^a-z]", "");
+			String TABLE_TITLE = coin.getSymbol().toLowerCase().replaceAll("[^a-z]", "");
 
 			if (createTable(TABLE_TITLE)) return false;
 
-			if (insertRecord(c, TABLE_TITLE)) return false;
+			if (insertRecord(coin, TABLE_TITLE)) return false;
 		}
 
 		// close connection

@@ -8,7 +8,6 @@ class Snapshot {
 	private static PreparedStatement createTable;
 
 	// SQL vocabulary
-	private static String TABLE_TITLE = null;
 	private static final String COLUMN_SYMBOL = "symbol";
 	private static final String COLUMN_NAME = "name";
 	private static final String COLUMN_PRICE = "price";
@@ -20,28 +19,19 @@ class Snapshot {
 	private static final String COLUMN_TOTALVOLUME24H = "totalVolume24h";
 	private static final String COLUMN_CIRCULATINGSUPPLY = "circulatingSupply";
 
-	private static String INSERT_SNAPSHOT =
-			"INSERT INTO " + TABLE_TITLE + " values(?,?,?,?,?,?,?,?,?);";
-
 	static boolean commitSnapshot(List<Coin> coins) {
 
 		// create connection
-		if(conn == null) {
-			try {
-				conn = DriverManager.getConnection(CONNECTION_STRING);
-			} catch (SQLException e) {
-				System.out.println("Couldn't connect to database: " + e.getMessage());
-				return false;
-			}
-		}
+		if (!createConnection()) return false;
 
 		// attempt to create tables for all coins
 		for (Coin c: coins) {
-			// table schema
-			String TABLE_TITLE = c.getSymbol();
-			String CREATE_TABLE =
+			// conform to table title strictures
+			String TABLE_TITLE = c.getSymbol().toLowerCase().replaceAll("[^a-z]", "");
+
+			String CREATE_COIN_TABLE =
 					"CREATE TABLE " + TABLE_TITLE +
-						'(' +
+							"(" +
 							COLUMN_SYMBOL + " String, " +
 							COLUMN_NAME + " String, " +
 							COLUMN_PRICE + " Double," +
@@ -51,33 +41,35 @@ class Snapshot {
 							COLUMN_VOLUME + " Double, " +
 							COLUMN_VOLUME24H + " Double, " +
 							COLUMN_TOTALVOLUME24H + " Double, " +
-							COLUMN_CIRCULATINGSUPPLY + " Double, " +
-						");"
+							COLUMN_CIRCULATINGSUPPLY + " Double" +
+							");"
 					;
 
 			try {
-				// TODO: If table doesn't exist for this coin, create it
-				// if( somethign something somethign)
-				createTable = conn.prepareStatement(CREATE_TABLE);
+				// TODO: If table already exists; don't create - update!
+				createTable = conn.prepareStatement(CREATE_COIN_TABLE);
 				createTable.execute();
 			} catch (SQLException e) {
-				System.out.printf("Couldn't create table for coin {%s}\n%s", TABLE_TITLE, e.getMessage());
+				System.out.printf("Couldn't create table for coin {%s}\n%s\n", TABLE_TITLE, e.getMessage());
 				return false;
 			}
 
 			if (conn != null) {
+				String INSERT_SNAPSHOT =
+						"INSERT INTO " + TABLE_TITLE + " values(?,?,?,?,?,?,?,?,?,?);";
 				try {
 					// TODO: Insert time record
 					PreparedStatement insertCoin = conn.prepareStatement(INSERT_SNAPSHOT);
 					insertCoin.setString(1, c.getSymbol());
 					insertCoin.setString(2, c.getName());
-					insertCoin.setDouble(3, c.getChange());
-					insertCoin.setDouble(4, c.getpChange());
-					insertCoin.setDouble(5, c.getMarketCap());
-					insertCoin.setDouble(6, c.getVolume());
-					insertCoin.setDouble(7, c.getVolume24h());
-					insertCoin.setDouble(8, c.getTotalVolume24h());
-					insertCoin.setDouble(9, c.getCirculatingSupply());
+					insertCoin.setDouble(3, c.getPrice());
+					insertCoin.setDouble(4, c.getChange());
+					insertCoin.setDouble(5, c.getpChange());
+					insertCoin.setDouble(6, c.getMarketCap());
+					insertCoin.setDouble(7, c.getVolume());
+					insertCoin.setDouble(8, c.getVolume24h());
+					insertCoin.setDouble(9, c.getTotalVolume24h());
+					insertCoin.setDouble(10, c.getCirculatingSupply());
 					insertCoin.execute();
 					insertCoin.close();
 				} catch (SQLException e) {
@@ -87,12 +79,23 @@ class Snapshot {
 			}
 		}
 
-		closeDB();
+		// close connection
+		return closeConnection();
+	}
 
+	private static boolean createConnection() {
+		if(conn == null) {
+			try {
+				conn = DriverManager.getConnection(CONNECTION_STRING);
+			} catch (SQLException e) {
+				System.out.println("Couldn't connect to database: " + e.getMessage());
+				return false;
+			}
+		}
 		return true;
 	}
 
-	private static void closeDB() {
+	private static boolean closeConnection() {
 		try {
 			if(createTable !=  null)
 				createTable.close();
@@ -100,7 +103,9 @@ class Snapshot {
 				conn.close();
 		} catch(SQLException e) {
 			System.out.println("Couldn't close connection: " + e.getMessage());
+			return false;
 		}
+		return true;
 	}
 
 }

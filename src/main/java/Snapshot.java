@@ -30,7 +30,7 @@ class Snapshot {
 			String TABLE_TITLE = c.getSymbol().toLowerCase().replaceAll("[^a-z]", "");
 
 			String CREATE_COIN_TABLE =
-					"CREATE TABLE " + TABLE_TITLE +
+					"CREATE TABLE IF NOT EXISTS " + TABLE_TITLE +
 							"(" +
 							COLUMN_SYMBOL + " String, " +
 							COLUMN_NAME + " String, " +
@@ -46,7 +46,6 @@ class Snapshot {
 					;
 
 			try {
-				// TODO: If table already exists; don't create - update!
 				createTable = conn.prepareStatement(CREATE_COIN_TABLE);
 				createTable.execute();
 			} catch (SQLException e) {

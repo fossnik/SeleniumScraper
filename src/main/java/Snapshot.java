@@ -5,7 +5,6 @@ class Snapshot {
 
 	private static final String CONNECTION_STRING = "jdbc:sqlite:src/main/resources/coinsnapshot.db";
 	private static Connection conn;
-	private static PreparedStatement createTable;
 
 	// SQL vocabulary
 	private static final String COLUMN_SYMBOL = "symbol";
@@ -82,8 +81,9 @@ class Snapshot {
 				;
 
 		try {
-			createTable = conn.prepareStatement(CREATE_COIN_TABLE);
+			PreparedStatement createTable = conn.prepareStatement(CREATE_COIN_TABLE);
 			createTable.execute();
+			createTable.close();
 		} catch (SQLException e) {
 			System.out.printf("Couldn't create table for coin {%s}\n%s\n", TABLE_TITLE, e.getMessage());
 			return true;
@@ -105,8 +105,6 @@ class Snapshot {
 
 	private static boolean closeConnection() {
 		try {
-			if(createTable !=  null)
-				createTable.close();
 			if(conn != null)
 				conn.close();
 		} catch(SQLException e) {

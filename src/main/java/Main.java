@@ -33,8 +33,7 @@ public class Main {
 
 		// build a list of coins with their respective properties
 		List<Coin> coins = new ArrayList<Coin>();
-//		for (int i = 1; i < symbols.size() + 1; i++) {
-		for (int i = 1; i < 3; i++) {
+		for (int i = 1; i < symbols.size() + 1; i++) {
 			String xpath = "//*[@id=\"scr-res-table\"]/table/tbody/tr[" +
 					i + "]/td[position() >= 2 and not(position() > 11)]";
 			coins.add(new Coin(properties,

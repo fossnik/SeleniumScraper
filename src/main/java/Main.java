@@ -12,7 +12,7 @@ public class Main {
 		WebDriver driver = new ChromeDriver();
 
 		// selenium is lame about relative paths
-		File testFile = new File("testfiles/Cryptocurrency Screener - Yahoo Finance.html");
+		File testFile = new File("src/main/resources/Cryptocurrency Screener - Yahoo Finance.html");
 		String absolutePath = String.valueOf(testFile.getAbsoluteFile());
 		driver.get("file:///" + absolutePath);
 

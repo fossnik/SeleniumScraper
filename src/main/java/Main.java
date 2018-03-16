@@ -14,9 +14,9 @@ public class Main {
 		// selenium is lame about relative paths
 		File testFile = new File("testfiles/Cryptocurrency Screener - Yahoo Finance.html");
 		String absolutePath = String.valueOf(testFile.getAbsoluteFile());
+		driver.get("file:///" + absolutePath);
 
 //		driver.get("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
-		driver.get("file:///" + absolutePath);
 
 		List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]"));
 		List<WebElement> columns = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));
@@ -24,27 +24,20 @@ public class Main {
 		List<String> symbols = new ArrayList<String>();
 		for (WebElement r : rows)
 			symbols.add(r.getText());
+		System.out.printf("ROWS:\t%s\n", symbols.toString());
 
 		List<String> properties = new ArrayList<String>();
 		for (WebElement c : columns)
 			properties.add(c.getText());
+		System.out.printf("COLUMNS:\t%s\n\n", properties.toString());
 
 		// build a list of coins with their respective properties
 		List<Coin> coins = new ArrayList<Coin>();
-//		for (int i = 2; i < symbols.size() + 1; i++) {
-		for (int i = 2; i < 6; i++) {
-			coins.add(new Coin(
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[2]/a")),
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[3]")),
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[4]")),
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[5]")),
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[6]")),
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[7]")),
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[8]")),
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[9]")),
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[10]")),
-					driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[" + i + "]/td[11]"))
-			));
+		for (int i = 1; i < symbols.size() + 1; i++) {
+			String xpath = "//*[@id=\"scr-res-table\"]/table/tbody/tr[" +
+					i + "]/td[position() >= 2 and not(position() > 11)]";
+			coins.add(new Coin(properties,
+					driver.findElements(By.xpath(xpath))));
 		}
 
 		for (Coin coin: coins) {

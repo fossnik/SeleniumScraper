@@ -1,6 +1,7 @@
 import org.openqa.selenium.WebElement;
 
 import java.security.InvalidParameterException;
+import java.util.*;
 
 public class Coin {
 	private String symbol;
@@ -14,22 +15,34 @@ public class Coin {
 	private Double totalVolume24h;
 	private Double circulatingSupply;
 
-	public Coin(WebElement symbol, WebElement name, WebElement price, WebElement change, WebElement pChange, WebElement marketCap, WebElement volume, WebElement volume24h, WebElement totalVolume24h, WebElement circulatingSupply) {
-		this.symbol = symbol.getText();
-		this.name = name.getText();
-		this.price = Double.valueOf(price.getText().replaceAll(",", ""));
-		this.change = Double.valueOf(change.getText().replaceAll(",", "").replaceAll("%", ""));
-		this.pChange = Double.valueOf(pChange.getText().replaceAll(",", "").replaceAll("%", ""));
-		this.marketCap = parseMagnitude(marketCap);
-		this.volume = parseMagnitude(volume);
-		this.volume24h = parseMagnitude(volume24h);
-		this.totalVolume24h = parseMagnitude(totalVolume24h);
-		this.circulatingSupply = parseMagnitude(circulatingSupply);
-	}
-	
-	private Double parseMagnitude(WebElement we) {
+	public Coin(List<String> properties, List<WebElement> values) {
+		Iterator p = properties.iterator();
+		Iterator v = values.iterator();
+		Map<String, String> coinsProperties = new HashMap<String, String>();
 
-		String string = we.getText().replaceAll("[^0-9.MBT]", "");
+		// collate key-value pairs
+		while (p.hasNext() && v.hasNext())
+			coinsProperties.put(p.next().toString(), ((WebElement)v.next()).getText());
+
+		try {
+			this.symbol = coinsProperties.get("Symbol");
+			this.name = coinsProperties.get("Name");
+			this.price = Double.valueOf(coinsProperties.get("Price (Intraday)").replaceAll(",", ""));
+			this.change = Double.valueOf(coinsProperties.get("Change").replaceAll(",", "").replaceAll("%", ""));
+			this.pChange = Double.valueOf(coinsProperties.get("% Change").replaceAll(",", "").replaceAll("%", ""));
+			this.marketCap = parseMagnitude(coinsProperties.get("Market Cap"));
+			this.volume = parseMagnitude(coinsProperties.get("Volume in Currency (Since 0:00 UTC)"));
+			this.volume24h = parseMagnitude(coinsProperties.get("Volume in Currency (24Hr)"));
+			this.totalVolume24h = parseMagnitude(coinsProperties.get("Total Volume All Currencies (24Hr)"));
+			this.circulatingSupply = parseMagnitude(coinsProperties.get("Circulating Supply"));
+		} catch (NullPointerException e) {
+			throw new NullPointerException("Values Collation Error: Could not find Value");
+		}
+	}
+
+	private Double parseMagnitude(String s) {
+
+		String string = s.replaceAll("[^0-9.MBT]", "");
 
 		// M B and T for Millions, Billions, and Trillions. (eg 142.43B	=== 142,000,000,000)
 		switch (string.charAt(string.length() - 1)) {

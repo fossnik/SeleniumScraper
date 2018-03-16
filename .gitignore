@@ -4,3 +4,4 @@ vcs.xml
 resources/coin_db
 coinsnapshot.db
 *.meta
+target/

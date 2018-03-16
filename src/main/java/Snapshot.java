@@ -7,6 +7,7 @@ class Snapshot {
 	private static Connection conn;
 
 	// SQL vocabulary
+	private static final String COLUMN_DATETIME = "DateCreated";
 	private static final String COLUMN_SYMBOL = "symbol";
 	private static final String COLUMN_NAME = "name";
 	private static final String COLUMN_PRICE = "price";
@@ -19,6 +20,7 @@ class Snapshot {
 	private static final String COLUMN_CIRCULATINGSUPPLY = "circulatingSupply";
 
 	static boolean commitSnapshot(List<Coin> coins) {
+		// TODO: create database file if none exists (causes failure)
 
 		// create connection
 		if (!createConnection()) return false;
@@ -40,20 +42,20 @@ class Snapshot {
 
 	private static boolean insertRecord(Coin c, String TABLE_TITLE) {
 		String INSERT_SNAPSHOT =
-				"INSERT INTO " + TABLE_TITLE + " values(?,?,?,?,?,?,?,?,?,?);";
+				"INSERT INTO " + TABLE_TITLE + " values(?,?,?,?,?,?,?,?,?,?,?);";
 		try {
-			// TODO: Insert time record
 			PreparedStatement insertCoin = conn.prepareStatement(INSERT_SNAPSHOT);
-			insertCoin.setString(1, c.getSymbol());
-			insertCoin.setString(2, c.getName());
-			insertCoin.setDouble(3, c.getPrice());
-			insertCoin.setDouble(4, c.getChange());
-			insertCoin.setDouble(5, c.getpChange());
-			insertCoin.setDouble(6, c.getMarketCap());
-			insertCoin.setDouble(7, c.getVolume());
-			insertCoin.setDouble(8, c.getVolume24h());
-			insertCoin.setDouble(9, c.getTotalVolume24h());
-			insertCoin.setDouble(10, c.getCirculatingSupply());
+			insertCoin.setTimestamp(1, getCurrentTimeStamp());
+			insertCoin.setString(2, c.getSymbol());
+			insertCoin.setString(3, c.getName());
+			insertCoin.setDouble(4, c.getPrice());
+			insertCoin.setDouble(5, c.getChange());
+			insertCoin.setDouble(6, c.getpChange());
+			insertCoin.setDouble(7, c.getMarketCap());
+			insertCoin.setDouble(8, c.getVolume());
+			insertCoin.setDouble(9, c.getVolume24h());
+			insertCoin.setDouble(10, c.getTotalVolume24h());
+			insertCoin.setDouble(11, c.getCirculatingSupply());
 			insertCoin.execute();
 			insertCoin.close();
 		} catch (SQLException e) {
@@ -67,6 +69,7 @@ class Snapshot {
 		String CREATE_COIN_TABLE =
 				"CREATE TABLE IF NOT EXISTS " + TABLE_TITLE +
 						"(" +
+						COLUMN_DATETIME + " DATETIME NOT NULL DEFAULT(GETDATE()), " +
 						COLUMN_SYMBOL + " String, " +
 						COLUMN_NAME + " String, " +
 						COLUMN_PRICE + " Double," +
@@ -89,6 +92,10 @@ class Snapshot {
 			return true;
 		}
 		return false;
+	}
+
+	private static java.sql.Timestamp getCurrentTimeStamp() {
+		return new java.sql.Timestamp(new java.util.Date().getTime());
 	}
 
 	private static boolean createConnection() {

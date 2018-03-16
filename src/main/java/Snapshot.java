@@ -26,60 +26,69 @@ class Snapshot {
 
 		// attempt to create tables for all coins
 		for (Coin c: coins) {
+
 			// conform to table title strictures
 			String TABLE_TITLE = c.getSymbol().toLowerCase().replaceAll("[^a-z]", "");
 
-			String CREATE_COIN_TABLE =
-					"CREATE TABLE IF NOT EXISTS " + TABLE_TITLE +
-							"(" +
-							COLUMN_SYMBOL + " String, " +
-							COLUMN_NAME + " String, " +
-							COLUMN_PRICE + " Double," +
-							COLUMN_CHANGE + " Double, " +
-							COLUMN_PCHANGE + " Double, " +
-							COLUMN_MARKETCAP + " Double, " +
-							COLUMN_VOLUME + " Double, " +
-							COLUMN_VOLUME24H + " Double, " +
-							COLUMN_TOTALVOLUME24H + " Double, " +
-							COLUMN_CIRCULATINGSUPPLY + " Double" +
-							");"
-					;
+			if (createTable(TABLE_TITLE)) return false;
 
-			try {
-				createTable = conn.prepareStatement(CREATE_COIN_TABLE);
-				createTable.execute();
-			} catch (SQLException e) {
-				System.out.printf("Couldn't create table for coin {%s}\n%s\n", TABLE_TITLE, e.getMessage());
-				return false;
-			}
-
-			if (conn != null) {
-				String INSERT_SNAPSHOT =
-						"INSERT INTO " + TABLE_TITLE + " values(?,?,?,?,?,?,?,?,?,?);";
-				try {
-					// TODO: Insert time record
-					PreparedStatement insertCoin = conn.prepareStatement(INSERT_SNAPSHOT);
-					insertCoin.setString(1, c.getSymbol());
-					insertCoin.setString(2, c.getName());
-					insertCoin.setDouble(3, c.getPrice());
-					insertCoin.setDouble(4, c.getChange());
-					insertCoin.setDouble(5, c.getpChange());
-					insertCoin.setDouble(6, c.getMarketCap());
-					insertCoin.setDouble(7, c.getVolume());
-					insertCoin.setDouble(8, c.getVolume24h());
-					insertCoin.setDouble(9, c.getTotalVolume24h());
-					insertCoin.setDouble(10, c.getCirculatingSupply());
-					insertCoin.execute();
-					insertCoin.close();
-				} catch (SQLException e) {
-					System.out.println("Couldn't insert data: " + e.getMessage());
-					return false;
-				}
-			}
+			if (insertRecord(c, TABLE_TITLE)) return false;
 		}
 
 		// close connection
 		return closeConnection();
+	}
+
+	private static boolean insertRecord(Coin c, String TABLE_TITLE) {
+		String INSERT_SNAPSHOT =
+				"INSERT INTO " + TABLE_TITLE + " values(?,?,?,?,?,?,?,?,?,?);";
+		try {
+			// TODO: Insert time record
+			PreparedStatement insertCoin = conn.prepareStatement(INSERT_SNAPSHOT);
+			insertCoin.setString(1, c.getSymbol());
+			insertCoin.setString(2, c.getName());
+			insertCoin.setDouble(3, c.getPrice());
+			insertCoin.setDouble(4, c.getChange());
+			insertCoin.setDouble(5, c.getpChange());
+			insertCoin.setDouble(6, c.getMarketCap());
+			insertCoin.setDouble(7, c.getVolume());
+			insertCoin.setDouble(8, c.getVolume24h());
+			insertCoin.setDouble(9, c.getTotalVolume24h());
+			insertCoin.setDouble(10, c.getCirculatingSupply());
+			insertCoin.execute();
+			insertCoin.close();
+		} catch (SQLException e) {
+			System.out.println("Couldn't insert data: " + e.getMessage());
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean createTable(String TABLE_TITLE) {
+		String CREATE_COIN_TABLE =
+				"CREATE TABLE IF NOT EXISTS " + TABLE_TITLE +
+						"(" +
+						COLUMN_SYMBOL + " String, " +
+						COLUMN_NAME + " String, " +
+						COLUMN_PRICE + " Double," +
+						COLUMN_CHANGE + " Double, " +
+						COLUMN_PCHANGE + " Double, " +
+						COLUMN_MARKETCAP + " Double, " +
+						COLUMN_VOLUME + " Double, " +
+						COLUMN_VOLUME24H + " Double, " +
+						COLUMN_TOTALVOLUME24H + " Double, " +
+						COLUMN_CIRCULATINGSUPPLY + " Double" +
+						");"
+				;
+
+		try {
+			createTable = conn.prepareStatement(CREATE_COIN_TABLE);
+			createTable.execute();
+		} catch (SQLException e) {
+			System.out.printf("Couldn't create table for coin {%s}\n%s\n", TABLE_TITLE, e.getMessage());
+			return true;
+		}
+		return false;
 	}
 
 	private static boolean createConnection() {

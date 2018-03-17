@@ -105,8 +105,7 @@ class Snapshot {
 
 	private static boolean closeConnection() {
 		try {
-			if(conn != null)
-				conn.close();
+			conn.close();
 		} catch(SQLException e) {
 			System.out.println("Couldn't close connection: " + e.getMessage());
 			return false;

@@ -53,7 +53,7 @@ class Snapshot {
 			insertCoin.setDouble(8, c.getVolume24h());
 			insertCoin.setDouble(9, c.getTotalVolume24h());
 			insertCoin.setDouble(10, c.getCirculatingSupply());
-			insertCoin.execute();
+			insertCoin.executeUpdate();
 			insertCoin.close();
 		} catch (SQLException e) {
 			System.out.println("Couldn't insert data: " + e.getMessage());

@@ -11,12 +11,12 @@ public class Main {
 	public static void main(String[] args) {
 		WebDriver driver = new ChromeDriver();
 
-		// selenium is lame about relative paths
-		File testFile = new File("src/main/resources/Cryptocurrency Screener - Yahoo Finance.html");
-		String absolutePath = String.valueOf(testFile.getAbsoluteFile());
-		driver.get("file:///" + absolutePath);
+		// TEST FILE
+//		File testFile = new File("src/main/resources/Cryptocurrency Screener - Yahoo Finance.html");
+//		String absolutePath = String.valueOf(testFile.getAbsoluteFile());
+//		driver.get("file:///" + absolutePath);
 
-//		driver.get("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
+		driver.get("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
 
 		List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]"));
 		List<WebElement> columns = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));

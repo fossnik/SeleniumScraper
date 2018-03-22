@@ -6,6 +6,19 @@ class Snapshot {
 	private static final String CONNECTION_STRING = "jdbc:sqlite:src/main/resources/coinsnapshot.db";
 	private static Connection conn;
 
+	// SQL vocabulary
+	private static final String COLUMN_DATETIME = "dateCreated";
+	private static final String COLUMN_SYMBOL = "symbol";
+	private static final String COLUMN_NAME = "name";
+	private static final String COLUMN_PRICE = "price";
+	private static final String COLUMN_CHANGE = "change";
+	private static final String COLUMN_PCHANGE = "pChange";
+	private static final String COLUMN_MARKETCAP = "marketCap";
+	private static final String COLUMN_VOLUME = "volume";
+	private static final String COLUMN_VOLUME24H = "volume24h";
+	private static final String COLUMN_TOTALVOLUME24H = "totalVolume24h";
+	private static final String COLUMN_CIRCULATINGSUPPLY = "circulatingSupply";
+
 	static boolean commitSnapshot(List<Coin> coins) {
 		// create connection
 		if (!createConnection()) return false;
@@ -53,17 +66,17 @@ class Snapshot {
 		String CREATE_COIN_TABLE =
 				"CREATE TABLE IF NOT EXISTS " + TABLE_TITLE +
 						"(" +
-						"dateCreated" + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-						"symbol" + " String, " +
-						"name" + " String, " +
-						"price" + " Double," +
-						"change" + " Double, " +
-						"pChange" + " Double, " +
-						"marketCap" + " Double, " +
-						"volume" + " Double, " +
-						"volume24h" + " Double, " +
-						"totalVolume24h" + " Double, " +
-						"circulatingSupply" + " Double" +
+						COLUMN_DATETIME + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+						COLUMN_SYMBOL + " String, " +
+						COLUMN_NAME + " String, " +
+						COLUMN_PRICE + " Double," +
+						COLUMN_CHANGE + " Double, " +
+						COLUMN_PCHANGE + " Double, " +
+						COLUMN_MARKETCAP + " Double, " +
+						COLUMN_VOLUME + " Double, " +
+						COLUMN_VOLUME24H + " Double, " +
+						COLUMN_TOTALVOLUME24H + " Double, " +
+						COLUMN_CIRCULATINGSUPPLY + " Double" +
 						");"
 				;
 

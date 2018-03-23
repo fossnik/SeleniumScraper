@@ -18,7 +18,7 @@ public class Main {
 
 		driver.get("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
 
-		List<WebElement> rows    = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]"));
+		List<WebElement> rows    = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]/a"));
 		List<WebElement> columns = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));
 
 		List<String> symbols = new ArrayList<String>();
@@ -40,9 +40,8 @@ public class Main {
 					driver.findElements(By.xpath(xpath))));
 		}
 
-		for (Coin coin: coins) {
+		for (Coin coin: coins)
 			System.out.println(coin.toString());
-		}
 
 		if (Snapshot.commitSnapshot(coins))
 			System.out.println("Snapshot Successfully Committed to DB");

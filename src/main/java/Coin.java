@@ -28,8 +28,8 @@ public class Coin {
 			this.symbol = coinsProperties.get("Symbol");
 			this.name = coinsProperties.get("Name");
 			this.price = Double.valueOf(coinsProperties.get("Price (Intraday)").replaceAll(",", ""));
-			this.change = Double.valueOf(coinsProperties.get("Change").replaceAll(",", "").replaceAll("%", ""));
-			this.pChange = Double.valueOf(coinsProperties.get("% Change").replaceAll(",", "").replaceAll("%", ""));
+			this.change = Double.valueOf(coinsProperties.get("Change").replaceAll("[%,]", ""));
+			this.pChange = Double.valueOf(coinsProperties.get("% Change").replaceAll("[%,]", ""));
 			this.marketCap = parseMagnitude(coinsProperties.get("Market Cap"));
 			this.volume = parseMagnitude(coinsProperties.get("Volume in Currency (Since 0:00 UTC)"));
 			this.volume24h = parseMagnitude(coinsProperties.get("Volume in Currency (24Hr)"));

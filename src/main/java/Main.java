@@ -18,7 +18,7 @@ public class Main {
 
 		driver.get("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
 
-		List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]"));
+		List<WebElement> rows    = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]"));
 		List<WebElement> columns = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));
 
 		List<String> symbols = new ArrayList<String>();

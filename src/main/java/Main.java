@@ -18,16 +18,15 @@ public class Main {
 
 		driver.get("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
 
-		List<WebElement> rows    = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]/a"));
-		List<WebElement> columns = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));
-
+		List<WebElement> headRows = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]/a"));
 		List<String> symbols = new ArrayList<String>();
-		for (WebElement r : rows)
+		for (WebElement r : headRows)
 			symbols.add(r.getText());
 		System.out.printf("ROWS:\t%s\n", symbols.toString());
 
+		List<WebElement> headCols = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));
 		List<String> properties = new ArrayList<String>();
-		for (WebElement c : columns)
+		for (WebElement c : headCols)
 			properties.add(c.getText());
 		System.out.printf("COLUMNS:\t%s\n\n", properties.toString());
 

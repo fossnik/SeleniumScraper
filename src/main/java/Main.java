@@ -20,14 +20,15 @@ public class Main {
 //		driver.get("file:///" + absolutePath);
 
 		driver.get("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
+		WebElement table = driver.findElement(By.xpath("//*[@id=\"scr-res-table\"]/table"));
 
-		List<WebElement> headRows = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]/a"));
+		List<WebElement> headRows = table.findElements(By.xpath("//tbody/tr[*]/td[2]/a"));
 		List<String> symbols = new ArrayList<String>();
 		for (WebElement r : headRows)
 			symbols.add(r.getText());
 		System.out.printf("ROWS:\t%s\n", symbols.toString());
 
-		List<WebElement> headCols = driver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));
+		List<WebElement> headCols = table.findElements(By.xpath("//thead/tr/th[*]/span"));
 		List<String> properties = new ArrayList<String>();
 		for (WebElement c : headCols)
 			properties.add(c.getText());
@@ -36,10 +37,10 @@ public class Main {
 		// build a list of coins with their respective properties
 		List<Coin> coins = new ArrayList<Coin>();
 		for (int i = 1; i < symbols.size() + 1; i++) {
-			String xpath = "//*[@id=\"scr-res-table\"]/table/tbody/tr[" +
+			String xpath = "//tbody/tr[" +
 					i + "]/td[position() >= 2 and not(position() > 11)]";
 			coins.add(new Coin(properties,
-					driver.findElements(By.xpath(xpath))));
+					table.findElements(By.xpath(xpath))));
 		}
 
 		for (Coin coin: coins)

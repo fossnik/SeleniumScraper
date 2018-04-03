@@ -4,8 +4,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.io.File;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,17 +31,28 @@ class Scraper {
 		List<String> properties = getProperties();
 		System.out.printf("COLUMNS (properties):\t%s\n\n", properties.toString());
 
-		// build a list of coins with their respective properties
-		List<Coin> coins = new ArrayList<Coin>();
+		// derive a list of coins with their respective properties from table body
+		List<WebElement> tableRows = chromeDriver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr"));
 
-		Coin coin = new Coin(properties);
-		for (int row = 1; row < symbols.size() + 1; row++) {
-			String xpath = "//*[@id=\"scr-res-table\"]/table/tbody/tr[" +
-					 row + "]/td[position() > 1 and position() < 12]";
+		return parseTableData(tableRows, properties);
+	}
 
-			List<WebElement> tableData = chromeDriver.findElements(By.xpath(xpath));
-			
-			coin.parseScrapedData(tableData);
+	private List<Coin> parseTableData(List<WebElement> tableRows, List<String> properties) {
+		List<Coin> coins = new ArrayList<>();
+
+//		for (int row = 1; row < symbols.size() + 1; row++) {
+//			String xpath = "//*[@id=\"scr-res-table\"]/table/tbody/tr[" +
+//					 row + "]/td[position() > 1 and position() < 12]";
+//			List<WebElement> tableData = chromeDriver.findElements(By.xpath(xpath));
+
+		for (WebElement row : tableRows) {
+			Coin coin = new Coin(properties);
+			List<String> rowElements = row.findElements(By.tagName("td")).stream()
+					.map(WebElement::getText)
+					.filter(s -> (!s.isEmpty()))
+					.collect(Collectors.toList());
+
+			coin.parseRow(rowElements);
 
 			coins.add(coin);
 		}

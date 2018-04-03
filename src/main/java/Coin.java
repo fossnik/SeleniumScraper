@@ -1,5 +1,3 @@
-import org.openqa.selenium.WebElement;
-
 import java.lang.reflect.Field;
 import java.security.InvalidParameterException;
 import java.util.*;
@@ -15,20 +13,22 @@ public class Coin {
 	private Double volume24h;
 	private Double totalVolume24h;
 	private Double circulatingSupply;
-	private Iterator propertiesItr;
+	private List<String> properties;
 
 	public Coin(List<String> properties) {
-		this.propertiesItr = properties.iterator();
+		this.properties = properties;
 	}
 
-	void parseScrapedData(List<WebElement> values) {
+	void parseRow(List<String> values) {
+		Iterator propertiesItr = properties.iterator();
 		Iterator valuesItr = values.iterator();
 		Map<String, String> coinsProperties = new HashMap<>();
 
 		// collate key-value pairs
 		while (propertiesItr.hasNext() && valuesItr.hasNext())
-			coinsProperties.put(propertiesItr.next().toString(), ((WebElement)valuesItr.next()).getText());
+			coinsProperties.put(propertiesItr.next().toString(), valuesItr.next().toString());
 
+		// attempt to evaluate each coin property from the associative array
 		try {
 			this.symbol = coinsProperties.get("Symbol");
 			this.name = coinsProperties.get("Name");

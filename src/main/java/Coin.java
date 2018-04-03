@@ -71,7 +71,8 @@ public class Coin {
 
 		for (Field field : this.getClass().getDeclaredFields())
 			try {
-				remit.append(field.getName()).append("=").append(field.get(this)).append(" ");
+				if (field.getType().toString().contains("class java.lang."))
+					remit.append(field.getName()).append("=").append(field.get(this)).append(" ");
 			} catch (IllegalAccessException e) {
 				System.out.println("IllegalAccessException - " + field.getName());
 			}

@@ -30,14 +30,20 @@ class Scraper {
 
 	List<Coin> compileSnapshot() {
 		List<String> symbols = getSymbols();
-		System.out.printf("ROWS (symbols):\t%s\n", symbols.toString());
+		if (symbols.size() > 2)
+			System.out.printf("ROWS (symbols):\t%s\n", symbols.toString());
+		else
+			System.out.println("Unable to Acquire Coin Symbols From Table Header");
 
 		List<String> properties = getProperties();
-		System.out.printf("COLUMNS (properties):\t%s\n\n", properties.toString());
+		if (properties.size() == 12)
+			System.out.printf("COLUMNS (properties):\t%s\n\n", properties.toString());
+		else
+			System.out.println("Expected 12 Properties in Column Header, but found " + properties.size());
 
-		// derive a list of coins with their respective properties from table body
-		List<WebElement> tableRows = chromeDriver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr"));
-
+		// derive a coin and its respective properties from each table row
+		String xpath = "//*[@id=\"scr-res-table\"]/table/tbody/tr";
+		List<WebElement> tableRows = chromeDriver.findElements(By.xpath(xpath));
 		return parseTableData(tableRows, properties);
 	}
 

@@ -27,12 +27,10 @@ class Scraper {
 	}
 
 	List<Coin> CompileSnapshot() {
-		List<WebElement> headRows = chromeDriver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]/a"));
-		List<String> symbols = headRows.stream().map(WebElement::getText).collect(Collectors.toList());
+		List<String> symbols = getSymbols();
 		System.out.printf("ROWS (symbols):\t%s\n", symbols.toString());
 
-		List<WebElement> headCols = chromeDriver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));
-		List<String> properties = headCols.stream().map(WebElement::getText).collect(Collectors.toList());
+		List<String> properties = getProperties();
 		System.out.printf("COLUMNS (properties):\t%s\n\n", properties.toString());
 
 		// build a list of coins with their respective properties
@@ -51,5 +49,17 @@ class Scraper {
 		}
 
 		return coins;
+	}
+
+	private List<String> getSymbols() {
+		String xpath = "//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]/a";
+		List<WebElement> headRows = chromeDriver.findElements(By.xpath(xpath));
+		return headRows.stream().map(WebElement::getText).collect(Collectors.toList());
+	}
+
+	private List<String> getProperties() {
+		String xpath = "//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span";
+		List<WebElement> headCols = chromeDriver.findElements(By.xpath(xpath));
+		return headCols.stream().map(WebElement::getText).collect(Collectors.toList());
 	}
 }

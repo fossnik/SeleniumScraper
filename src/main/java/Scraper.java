@@ -21,7 +21,11 @@ class Scraper {
 //		String absolutePath = String.valueOf(testFile.getAbsoluteFile());
 //		driver.get("file:///" + absolutePath);
 
-		this.chromeDriver.get("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
+		String url = "https://finance.yahoo.com/cryptocurrencies?offset=0&count=150";
+		this.chromeDriver.get(url);
+
+		if (this.chromeDriver.getTitle().isEmpty())
+			throw new ExceptionInInitializerError("\nScraper Cannot Access Resource:\n- " + url + " -\n");
 	}
 
 	List<Coin> compileSnapshot() {

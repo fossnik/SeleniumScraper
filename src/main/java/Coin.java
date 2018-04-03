@@ -15,15 +15,19 @@ public class Coin {
 	private Double volume24h;
 	private Double totalVolume24h;
 	private Double circulatingSupply;
+	private Iterator propertiesItr;
 
-	public Coin(List<String> properties, List<WebElement> values) {
-		Iterator p = properties.iterator();
-		Iterator v = values.iterator();
-		Map<String, String> coinsProperties = new HashMap<String, String>();
+	public Coin(List<String> properties) {
+		this.propertiesItr = properties.iterator();
+	}
+
+	void parseScrapedData(List<WebElement> values) {
+		Iterator valuesItr = values.iterator();
+		Map<String, String> coinsProperties = new HashMap<>();
 
 		// collate key-value pairs
-		while (p.hasNext() && v.hasNext())
-			coinsProperties.put(p.next().toString(), ((WebElement)v.next()).getText());
+		while (propertiesItr.hasNext() && valuesItr.hasNext())
+			coinsProperties.put(propertiesItr.next().toString(), ((WebElement)valuesItr.next()).getText());
 
 		try {
 			this.symbol = coinsProperties.get("Symbol");
@@ -37,12 +41,12 @@ public class Coin {
 			this.totalVolume24h = parseMagnitude(coinsProperties.get("Total Volume All Currencies (24Hr)"));
 			this.circulatingSupply = parseMagnitude(coinsProperties.get("Circulating Supply"));
 		} catch (NullPointerException e) {
-			throw new NullPointerException("Values Collation Error: Could not find Value");
+			System.out.println("Values Collation Error: Could not find Value");
+			throw new NullPointerException(e.getMessage());
 		}
 	}
 
 	private Double parseMagnitude(String s) {
-
 		String string = s.replaceAll("[^0-9.MBT]", "");
 
 		// M B and T for Millions, Billions, and Trillions. (eg 142.43B	=== 142,000,000,000)

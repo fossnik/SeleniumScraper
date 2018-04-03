@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class Scraper {
 	WebDriver chromeDriver;
@@ -28,15 +29,11 @@ class Scraper {
 	List<Coin> CompileSnapshot() {
 
 		List<WebElement> headRows = chromeDriver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/tbody/tr[*]/td[2]/a"));
-		List<String> symbols = new ArrayList<String>();
-		for (WebElement r : headRows)
-			symbols.add(r.getText());
+		List<String> symbols = headRows.stream().map(WebElement::getText).collect(Collectors.toList());
 		System.out.printf("ROWS:\t%s\n", symbols.toString());
 
 		List<WebElement> headCols = chromeDriver.findElements(By.xpath("//*[@id=\"scr-res-table\"]/table/thead/tr/th[*]/span"));
-		List<String> properties = new ArrayList<String>();
-		for (WebElement c : headCols)
-			properties.add(c.getText());
+		List<String> properties = headCols.stream().map(WebElement::getText).collect(Collectors.toList());
 		System.out.printf("COLUMNS:\t%s\n\n", properties.toString());
 
 		// build a list of coins with their respective properties

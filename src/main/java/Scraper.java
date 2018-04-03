@@ -38,11 +38,10 @@ class Scraper {
 		// build a list of coins with their respective properties
 		List<Coin> coins = new ArrayList<Coin>();
 
+		Coin coin = new Coin(properties);
 		for (int row = 1; row < symbols.size() + 1; row++) {
 			String xpath = "//*[@id=\"scr-res-table\"]/table/tbody/tr[" +
 					 row + "]/td[position() > 1 and position() < 12]";
-
-			Coin coin = new Coin(properties);
 
 			List<WebElement> tableData = chromeDriver.findElements(By.xpath(xpath));
 			

@@ -6,7 +6,7 @@ public class Main {
 		Scraper scraper = new Scraper();
 
 		try {
-			List<Coin> coins = scraper.CompileSnapshot();
+			List<Coin> coins = scraper.compileSnapshot();
 		
 			for (Coin coin: coins)
 				System.out.println(coin.toString());
@@ -16,12 +16,11 @@ public class Main {
 			else
 				System.out.println("Failed to Push to database");
 
-			scraper.chromeDriver.close();
 			scraper.chromeDriver.quit();
 			System.exit(0);
 		}
 		catch (Exception e) {
-			scraper.chromeDriver.close();
+			e.printStackTrace();
 			scraper.chromeDriver.quit();
 			System.exit(1);
 		}

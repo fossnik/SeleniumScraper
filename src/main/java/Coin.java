@@ -22,7 +22,7 @@ public class Coin {
 	void parseRow(List<String> values) {
 		Iterator propertiesItr = properties.iterator();
 		Iterator valuesItr = values.iterator();
-		Map<String, String> coinsProperties = new HashMap<>();
+		Map<String, String> coinsProperties = new TreeMap<>();
 
 		// collate key-value pairs
 		while (propertiesItr.hasNext() && valuesItr.hasNext())

@@ -24,7 +24,7 @@ class Scraper {
 		this.chromeDriver.get("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
 	}
 
-	List<Coin> CompileSnapshot() {
+	List<Coin> compileSnapshot() {
 		List<String> symbols = getSymbols();
 		System.out.printf("ROWS (symbols):\t%s\n", symbols.toString());
 

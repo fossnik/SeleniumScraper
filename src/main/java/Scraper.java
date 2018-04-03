@@ -40,11 +40,6 @@ class Scraper {
 	private List<Coin> parseTableData(List<WebElement> tableRows, List<String> properties) {
 		List<Coin> coins = new ArrayList<>();
 
-//		for (int row = 1; row < symbols.size() + 1; row++) {
-//			String xpath = "//*[@id=\"scr-res-table\"]/table/tbody/tr[" +
-//					 row + "]/td[position() > 1 and position() < 12]";
-//			List<WebElement> tableData = chromeDriver.findElements(By.xpath(xpath));
-
 		for (WebElement row : tableRows) {
 			Coin coin = new Coin(properties);
 			List<String> rowElements = row.findElements(By.tagName("td")).stream()

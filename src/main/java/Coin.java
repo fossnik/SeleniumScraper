@@ -13,10 +13,10 @@ public class Coin {
 	private Double volume24h;
 	private Double totalVolume24h;
 	private Double circulatingSupply;
-	private List<String> properties;
+	private static List<String> properties;
 
 	public Coin(List<String> properties) {
-		this.properties = properties;
+		Coin.properties = properties;
 	}
 
 	void parseRow(List<String> values) {

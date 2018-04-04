@@ -1,8 +1,7 @@
-vcs.xml
+.idea/vcs.xml
 .idea/workspace.xml
 .idea/uiDesigner.xml
 .idea/dataSources.local.xml
-resources/coin_db
 coinsnapshot.db
 *.meta
 target/

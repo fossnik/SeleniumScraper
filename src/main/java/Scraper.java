@@ -11,21 +11,14 @@ import java.util.stream.Collectors;
 class Scraper {
 	WebDriver chromeDriver;
 
-	Scraper() {
+	Scraper(String url) {
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--headless", "--disable-javascript");
 		this.chromeDriver = new ChromeDriver(options);
-
-		// TEST FILE
-//		File testFile = new File("src/main/resources/Cryptocurrency Screener - Yahoo Finance.html");
-//		String absolutePath = String.valueOf(testFile.getAbsoluteFile());
-//		driver.get("file:///" + absolutePath);
-
-		String url = "https://finance.yahoo.com/cryptocurrencies?offset=0&count=150";
 		this.chromeDriver.get(url);
 
 		if (this.chromeDriver.getTitle().isEmpty())
-			throw new ExceptionInInitializerError("\nScraper Cannot Access Resource:\n- " + url + " -\n");
+			throw new ExceptionInInitializerError("\n[empty page title] - Scraper Cannot Access Resource:\n- " + url + " -\n");
 	}
 
 	List<Coin> compileSnapshot() {
@@ -33,7 +26,7 @@ class Scraper {
 		if (symbols.size() > 2)
 			System.out.printf("ROWS (symbols):\t%s\n", symbols.toString());
 		else
-			System.out.println("Unable to Acquire Coin Symbols From Table Header");
+			System.out.println("Unable to Acquire Coin Symbols From Row Header");
 
 		List<String> properties = getProperties();
 		if (properties.size() == 12)

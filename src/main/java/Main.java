@@ -12,9 +12,9 @@ public class Main {
 				System.out.println(coin.toString());
 
 			if (Snapshot.commitSnapshot(coins))
-				System.out.println("Snapshot Successfully Committed to DB");
+				System.out.println("\n Snapshot Successfully Committed to DB");
 			else
-				System.out.println("Failed to Push to database");
+				System.out.println("\n Failed to Push to database");
 
 			scraper.chromeDriver.quit();
 			System.exit(0);

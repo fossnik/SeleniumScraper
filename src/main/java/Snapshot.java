@@ -29,9 +29,11 @@ class Snapshot {
 			// conform to table title strictures
 			String TABLE_TITLE = coin.getSymbol().toLowerCase().replaceAll("[^a-z]", "");
 
-			if (createTable(TABLE_TITLE)) return false;
+			// create table (if not exist)
+			if (!createTable(TABLE_TITLE)) return false;
 
-			if (insertRecord(coin, TABLE_TITLE)) return false;
+			// insert record
+			if (!insertRecord(coin, TABLE_TITLE)) return false;
 		}
 
 		// close connection
@@ -57,9 +59,9 @@ class Snapshot {
 			insertCoin.close();
 		} catch (SQLException e) {
 			System.out.println("Couldn't insert data: " + e.getMessage());
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	private static boolean createTable(String TABLE_TITLE) {
@@ -86,9 +88,9 @@ class Snapshot {
 			createTable.close();
 		} catch (SQLException e) {
 			System.out.printf("Couldn't create table for coin {%s}\n%s\n", TABLE_TITLE, e.getMessage());
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	private static boolean createConnection() {

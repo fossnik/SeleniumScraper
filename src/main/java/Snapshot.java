@@ -42,7 +42,7 @@ class Snapshot {
 
 	private static boolean insertRecord(Coin c, String TABLE_TITLE) {
 		String INSERT_SNAPSHOT =
-				"INSERT INTO " + TABLE_TITLE + " values(CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?,?,?);";
+				"INSERT INTO " + TABLE_TITLE + " values(NULL,CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?,?,?);";
 		try {
 			PreparedStatement insertCoin = conn.prepareStatement(INSERT_SNAPSHOT);
 			insertCoin.setString(1, c.getSymbol());
@@ -68,6 +68,7 @@ class Snapshot {
 		String CREATE_COIN_TABLE =
 				"CREATE TABLE IF NOT EXISTS " + TABLE_TITLE +
 						"(" +
+						"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
 						COLUMN_DATETIME + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
 						COLUMN_SYMBOL + " String, " +
 						COLUMN_NAME + " String, " +

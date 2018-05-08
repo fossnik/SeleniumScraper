@@ -3,7 +3,7 @@ import java.sql.*;
 
 class Snapshot {
 
-	private static final String CONNECTION_STRING = "jdbc:sqlite:src/main/resources/coinsnapshot.db";
+	private static final String CONNECTION_STRING = "jdbc:sqlite:src/main/resources/RelationalSnapshot.db";
 	private static Connection conn;
 
 	// SQL vocabulary

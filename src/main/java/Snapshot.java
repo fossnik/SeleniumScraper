@@ -26,21 +26,20 @@ class Snapshot {
 		// attempt to create tables for all coins
 		for (Coin coin: coins) {
 
-			// conform to table title strictures
-			String TABLE_TITLE = coin.getSymbol().toLowerCase().replaceAll("[^a-z]", "");
-
-			// create table (if not exist)
-			if (!createTable(TABLE_TITLE)) return false;
+			// create coin tables (if not exist)
+			if (!createTables(coin)) return false;
 
 			// insert record
-			if (!insertRecord(coin, TABLE_TITLE)) return false;
+			if (!insertRecord(coin)) return false;
 		}
 
 		// close connection
 		return closeConnection();
 	}
 
-	private static boolean insertRecord(Coin c, String TABLE_TITLE) {
+	private static boolean insertRecord(Coin c) {
+		// conform to table title strictures
+		String TABLE_TITLE = c.getSymbol().toLowerCase().replaceAll("[^a-z]", "");
 		String INSERT_SNAPSHOT =
 				"INSERT INTO " + TABLE_TITLE + " values(NULL,CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?,?,?);";
 		try {
@@ -84,7 +83,7 @@ class Snapshot {
 				;
 
 		try {
-			PreparedStatement createTable = conn.prepareStatement(CREATE_COIN_TABLE);
+			PreparedStatement createTable = conn.prepareStatement(CREATE_SNAPSHOT_RECORDS_TABLE);
 			createTable.execute();
 			createTable.close();
 		} catch (SQLException e) {

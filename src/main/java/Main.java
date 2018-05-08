@@ -3,10 +3,11 @@ import java.util.List;
 public class Main {
 	public static void main(String[] args) {
 
+		System.out.println("\nLoading Selenium...\n");
 		Scraper scraper = new Scraper("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
 
 		try {
-			System.out.println("\nScraping...");
+			System.out.println("\nScraping...\n");
 			List<Coin> coins = scraper.compileSnapshot();
 			for (Coin coin: coins)
 				System.out.println(coin.toString());

@@ -2,9 +2,13 @@ import java.util.List;
 
 public class Main {
 	public static void main(String[] args) {
+		String url = "https://finance.yahoo.com/cryptocurrencies?offset=0&count=150";
+		performScraping(url);
+	}
 
+	static void performScraping(String url) {
 		System.out.println("\nLoading Selenium...\n");
-		Scraper scraper = new Scraper("https://finance.yahoo.com/cryptocurrencies?offset=0&count=150");
+		Scraper scraper = new Scraper(url);
 
 		try {
 			System.out.println("\nScraping...\n");
@@ -26,6 +30,5 @@ public class Main {
 			scraper.chromeDriver.quit();
 			System.exit(1);
 		}
-
 	}
 }
